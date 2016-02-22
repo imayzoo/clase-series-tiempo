@@ -1,0 +1,32 @@
+## recodificar variables o reetiquetaR ### 
+library(foreign)
+base <- read.dbf("base.dbf")
+str(base)
+attach(base)
+table (SEX)
+table(EDA)
+EDA <- as.numeric(as.character((EDA)))
+
+## ponderar casos
+library(questionr)
+c1 <- wtd.table(base$SEX, weights = base$FAC) # sirve para ponderar el peso es FAC
+c0<- table (base$SEX)
+c0
+getwd()
+write.csv(c1,file="pea.csv") # crea un csv
+
+### etiquetar ##+
+tabrama <- wtd.table(SEX,weights = base$FAc)
+tabrama
+help("margin.table")
+c1.1 <- round((tabrama/margin.table(tabrama))*100,2) #margin suma cadaq una de la casillas
+base$SEX1 <- ordered(base$SEX,levels=c(1,2),labels=c("Hombres","Mujeres")) ## ordered ordena los datos
+c2 <- wtd.table(base$SEX1, weights = base$FAc)
+c2
+write.csv(c2,file="sexo.csv") # crea un csv
+
+## ejercicio
+base$NAC_MES<- as.numeric(as.character((base$NAC_MES)))
+is.numeric(base$NAC_MES)
+base$NAC_MES <- ordered(base$NAC_MES,levels=c(1:12),labels=c("Enero","Febrero","MArzo","Abril","MAyo","junio","julio","agosto","septiembre","octumbre","novimebre","diciembre"))
+base$NAC_MES

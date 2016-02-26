@@ -1,0 +1,22 @@
+library(foreign)
+coe <- read.dbf("coe.dbf")
+is.numeric(coe$ENT)
+aguas <- subset(coe,ENT=="14") # aguascalientes
+help("row.names")
+aguas$P3L1 <- as.numeric(as.character((aguas$P3L))) #3PL PREGUNTA CUSTIONARIO BASICO
+aguas$P3L1 <- ordered(aguas$P3L1,levels=c(1,2,3,4,5,6,7,8,9,10,11,99),labels=c("1 persona","2-5 personas","6-10 personas","11-15 años","16-20 años","21-30 años","31-50 personas","51-100 personas","101-250 personas","250-500 personas","5001 y mas","no sabe"))
+aguas$P5 <- as.numeric(as.character((aguas$P5)))
+aguas$P51 <- ordered(aguas$P5,levels=c(1,2,3,9),labels=c(" de día? "," de noche?","mixta?","no sabe"))
+aguas$P2E1 <- as.numeric(as.character((aguas$P2E)))
+aguas$P2E1 <- ordered(aguas$P2E1,levels=c(1,2,3,4,5),labels=c(" una persona temporalmente ausente de su
+actividad u oficio? "," pensionado o jubilado de su empleo",
+"estudiante","una persona que se dedica a los quehaceres de su","una persona con alguna limitación física o mental"))
+## tablas hombre mujer clasificado por edades##
+aguas$P11 <- as.numeric(as.character((aguas$P1)))
+table(aguas$P3L1,aguas$P11)
+table(aguas$P51,aguas$P11)
+table(aguas$P2E1,aguas$P11)
+##??wtd.table
+wtd.table(aguas$P3L1,aguas$P11, weights = aguas$FAC)
+wtd.table(aguas$P51,aguas$P11, weights = aguas$FAC)
+wtd.table(aguas$P2E1,aguas$P11, weights = aguas$FAC)# expandir variables

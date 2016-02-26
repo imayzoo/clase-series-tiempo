@@ -1,0 +1,36 @@
+rm (list=ls()) # limapia en entorno de trabajo
+library(foreign)
+sdem <- data.frame(read.dbf("sdem.dbf"))
+#metodo 1
+sdem$CLASE2.1 [as.numeric(sdem$CLASE2) >= 0 & as.numeric(sdem$CLASE2) <= 2] <-1 # recodificacion manual de varaibles
+sdem$CLASE2.1 [as.numeric(sdem$CLASE2) >= 3 & as.numeric(sdem$CLASE2) <= 4] <-2 # rango de 3 a 4
+table(sdem$CLASE2)
+
+#metodo 2
+sdem$CLASE2.2 <- ifelse(as.numeric(sdem$CLASE2)>=0 & as.numeric(sdem$CLASE2)<=2,1,
+                 ifelse(as.numeric(sdem$CLASE2)>=3 & as.numeric(sdem$CLASE2)<=3,2,3))
+table(sdem$CLASE2.2)
+
+### Ejercicio ###
+#recodificar variable edad (0-14)=1 niños, (15-29)=2 jovenes, (30-59)=3 adultos, (60-97)=4 adultos mayores,(98-99)=5 no espeficado
+# por ambon metodos
+
+
+#metodo 1
+sdem$EDAD <- as.numeric(as.character((sdem$EDA))) # convertir a numerico la variable completa
+sdem$EDA.3 [(sdem$EDAD)>=0  & (sdem$EDAD) <= 14] <-1
+sdem$EDA.3 [(sdem$EDAD)>=15 & (sdem$EDAD) <= 29] <-2
+sdem$EDA.3 [(sdem$EDAD)>=30 & (sdem$EDAD) <= 59] <-3
+sdem$EDA.3 [(sdem$EDAD)>=60 & (sdem$EDAD) <= 97] <-4
+sdem$EDA.3 [(sdem$EDAD)>=98 & (sdem$EDAD) <= 99] <-5
+sdem$EDA.3 <- ordered(sdem$EDA.3,levels=c(1,2,3,4,5),labels=c("Niños"," JOvenes","Adultos","Adultos mayores","no espf."))
+table(sdem$EDA.3)
+
+### metodo 2 ###
+sdem$EDA.2 <- ifelse (as.numeric(sdem$EDAD)>=0  & as.numeric(sdem$EDAD) <= 14,1,
+              ifelse (as.numeric(sdem$EDAD)>=15 & as.numeric(sdem$EDAD) <= 29,2,
+              ifelse (as.numeric(sdem$EDAD)>=30 & as.numeric(sdem$EDAD) <= 59,3,
+              ifelse (as.numeric(sdem$EDAD)>=60 & as.numeric(sdem$EDAD) <= 97,4,
+                 5))))
+sdem$EDA.2 <- ordered(sdem$EDA.2,levels=c(1,2,3,4,5),labels=c("Niños"," JOvenes","Adultos","Adultos mayores","no espf."))
+table(sdem$EDA.2)
